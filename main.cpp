@@ -7,10 +7,10 @@ using std::cout;
 using std::endl;
 
 std::array<int, 8> validateMovesFromPos(int posX, int posY, std::array<std::array<int, 8>, 8> &board);
-void makeMove(int i, int &x, int &y, array<array<int, 8>, 8>& board);
+void makeMove(int move, int &Xpos, int &y, array<array<int, 8>, 8>& board);
 bool isValidMoveAvailable(array<int, 8> array1);
-void knights_tour(array<array<int, 8>, 8> array1);
-int pickRandomMoveFromChoices(array<int, 8> array1);
+void knights_tour(array<array<int, 8>, 8> board);
+int pickRandomMoveFromChoices(array<int, 8> listOfMoves);
 
 int main() {
 	array<array<int, 8>, 8> board{};
@@ -42,7 +42,7 @@ void knights_tour(array<array<int, 8>, 8> board) {
 
 int pickRandomMoveFromChoices(array<int, 8> listOfMoves) {
 	array<int, 8> arValidMoveNumbers{-1};
-	srand(time(0));
+	srand(time(nullptr));
 	int countValidMoves{0};
 	int i{0};
 	for ( ; i < listOfMoves.size(); i++) {
@@ -52,7 +52,7 @@ int pickRandomMoveFromChoices(array<int, 8> listOfMoves) {
 		}
 
 	}
-	auto choiceOfValidMove = 0;
+	int choiceOfValidMove;
 	if (countValidMoves > 1) {
 		choiceOfValidMove = rand() % (countValidMoves);
 	} else {
@@ -62,29 +62,27 @@ int pickRandomMoveFromChoices(array<int, 8> listOfMoves) {
 	return arValidMoveNumbers[choiceOfValidMove];
 }
 
-bool isValidMoveAvailable(array<int, 8> array1) {
-	if (array1[0] == 0) return true;
-	if (array1[1] == 0) return true;
-	if (array1[2] == 0) return true;
-	if (array1[3] == 0) return true;
-	if (array1[4] == 0) return true;
-	if (array1[5] == 0) return true;
-	if (array1[6] == 0) return true;
-	if (array1[7] == 0) return true;
+bool isValidMoveAvailable(array<int, 8> listOfValidMoves) {
+	for (auto move : listOfValidMoves) {
+		if (move == 0) return true;
+	}
+
 	return false;
 }
 
-void makeMove(int move, int &x, int &y, array<array<int, 8>, 8>& board) {
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "LocalValueEscapesScope"
+void makeMove(int move, int& Xpos, int& Ypos, array<array<int, 8>, 8>& board) {
 	array<int, 8> horizontalMove{2, 1, -1, -2, -2, -1, 1, 2};
 	array<int, 8> verticalMove{-1, -2, -2, -1, 1, 2, 2, 1};
-	board[x][y] = 1;
-	cout << "Making move " << move << ", from " << x << "," << y << "  to  ";
-	x += horizontalMove[move];
-	y += verticalMove[move];
-	cout << x << "," << y << endl;
-	board[x][y] = 1;
-
+	board[Xpos][Ypos] = 1;
+	cout << "Making move " << move << ", from " << Xpos << "," << Ypos << "  to  ";
+	Xpos += horizontalMove[move];
+	Ypos += verticalMove[move];
+	cout << Xpos << "," << Ypos << endl;
+	board[Xpos][Ypos] = 1;
 }
+#pragma clang diagnostic pop
 
 
 array<int, 8> validateMovesFromPos(int posX, int posY, array<array<int, 8>, 8> &board) {
@@ -110,22 +108,3 @@ array<int, 8> validateMovesFromPos(int posX, int posY, array<array<int, 8>, 8> &
 	}
 	return valid;
 }
-
-//     0  1  2  3  4  5  6  7
-//   -------------------------
-//  0|  |  |  |  |  |  |  |  |
-//   -------------------------
-//  1|  |  |  |  |  |  |  |  |
-//   -------------------------
-//  2|  |  |  |  |  |  |  |  |
-//   -------------------------
-//  3|  |  |  |  |  |  |  |  |
-//   -------------------------
-//  4|  |  |  |  |  |  |  |  |
-//   -------------------------
-//  5|  |  |  |  |  |  |  |  |
-//   -------------------------
-//  6|  |  |  |  |  |  |  |  |
-//   -------------------------
-//  7|  |  |  |  |  |  |  |  |
-//   -------------------------
