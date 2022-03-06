@@ -18,7 +18,8 @@ int main() {
 	array<array<int, 8>, 8> board{};
 
 	int max{0};
-	for (int k = 1; k <= 1000; ++k) {
+	static int k{1};
+	for (; k <= 25000; ++k) {
 		int result = knights_tour(board);
 		if (result > max) max = result;
 		cout << "Game #" << k << ":\tresult = " << result << endl;
