@@ -52,17 +52,12 @@ int pickRandomMoveFromChoices(array<int, 8> listOfMoves) {
 		}
 
 	}
-//	cout << "L" << arValidMoveNumbers[0] << arValidMoveNumbers[1] << arValidMoveNumbers[2]
-//		   << arValidMoveNumbers[3] << arValidMoveNumbers[4] << arValidMoveNumbers[5]
-//		   << arValidMoveNumbers[6] << arValidMoveNumbers[7] << "choices#" << countValidMoves << endl;
-
 	auto choiceOfValidMove = 0;
 	if (countValidMoves > 1) {
 		choiceOfValidMove = rand() % (countValidMoves);
 	} else {
 		choiceOfValidMove = 0;
 	}
-//	cout << "choice " << choiceOfValidMove << " " << arValidMoveNumbers[choiceOfValidMove] << endl;
 
 	return arValidMoveNumbers[choiceOfValidMove];
 }
@@ -97,30 +92,22 @@ array<int, 8> validateMovesFromPos(int posX, int posY, array<array<int, 8>, 8> &
 	array<int, 8> verticalMove{-1, -2, -2, -1, 1, 2, 2, 1};
 	array<int, 8> valid{3, 3, 3, 3, 3, 3, 3, 3};
 	for (auto i = 0; i < 8; i++) {
-//		cout << "\n  checking move #" << i
-//			<< " (" << horizontalMove[i] << "," << verticalMove[i] << ")  x:"
-//			<< posX << " y:" << posY
-//			   << " (" << posX + horizontalMove[i] << "," << posY + verticalMove[i] << ") -- ";
 		if ((posX + horizontalMove[i]) >= 0 &&
 		    (posX + horizontalMove[i]) <= 7) {
 			valid[i] -= 1;
-//			cout << "hc";
 		}
 		if ((posY + verticalMove[i]) >= 0 &&
 		    (posY + verticalMove[i]) <= 7) {
 			valid[i] -= 1;
-//			cout << "vc";
 		}
 		if (valid[i] == 1) {
 			if (board[posX + horizontalMove[i]][posY + verticalMove[i]] == 0) {
 				valid[i] -= 1;
-//				cout << "oc";
 //				cout << "  valid!" << endl;
 			}
 		}
 
 	}
-//	cout << valid[0] << valid[1] << valid[2] << valid[3] << valid[4] << valid[5] << valid[6] << valid[7] << endl;
 	return valid;
 }
 
