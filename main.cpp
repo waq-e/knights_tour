@@ -1,26 +1,34 @@
 #include <iostream>
 #include <array>
 #include <iterator>
+#include <random>
+#include <ctime>
+#include <iomanip>
+#include <chrono>
 
-using std::array;
-using std::cout;
-using std::endl;
+using namespace std;
 
 std::array<int, 8> validateMovesFromPos(int posX, int posY, std::array<std::array<int, 8>, 8> &board);
 void makeMove(int move, int &Xpos, int &y, array<array<int, 8>, 8>& board);
 bool isValidMoveAvailable(array<int, 8> array1);
-void knights_tour(array<array<int, 8>, 8> board);
+int knights_tour(array<array<int, 8>, 8> board);
 int pickRandomMoveFromChoices(array<int, 8> listOfMoves);
 
 int main() {
 	array<array<int, 8>, 8> board{};
 
-	knights_tour(board);
+	int max{0};
+	for (int k = 1; k <= 1000; ++k) {
+		int result = knights_tour(board);
+		if (result > max) max = result;
+		cout << "Game #" << k << ":\tresult = " << result << endl;
+	}
+	cout << "Best game made " << max << " moves.." << endl;
 
 	return 0;
 }
 
-void knights_tour(array<array<int, 8>, 8> board) {
+int knights_tour(array<array<int, 8>, 8> board) {
 	int totalMovesMade{0};
 
 	int Xpos{4};   // start near center of chessboard
@@ -31,18 +39,18 @@ void knights_tour(array<array<int, 8>, 8> board) {
 	while (isValidMoveAvailable(listOfValidMoves)) {
 		totalMovesMade++;
 		int move = pickRandomMoveFromChoices(listOfValidMoves);
-		cout << "#" << totalMovesMade << ": ";
+//		cout << "#" << totalMovesMade << ": ";
 		makeMove(move, Xpos, Ypos, board);
 		listOfValidMoves = validateMovesFromPos(Xpos, Ypos, board);
 	}
 
-
-
+	return totalMovesMade;
 }
 
 int pickRandomMoveFromChoices(array<int, 8> listOfMoves) {
+	std::default_random_engine engine{static_cast<unsigned int>(std::chrono::steady_clock::now().time_since_epoch().count())};
 	array<int, 8> arValidMoveNumbers{-1};
-	srand(time(nullptr));
+
 	int countValidMoves{0};
 	int i{0};
 	for ( ; i < listOfMoves.size(); i++) {
@@ -54,7 +62,8 @@ int pickRandomMoveFromChoices(array<int, 8> listOfMoves) {
 	}
 	int choiceOfValidMove;
 	if (countValidMoves > 1) {
-		choiceOfValidMove = rand() % (countValidMoves);
+		std::uniform_int_distribution<int> randomInt{0, countValidMoves};
+		choiceOfValidMove = randomInt(engine);;
 	} else {
 		choiceOfValidMove = 0;
 	}
@@ -70,20 +79,16 @@ bool isValidMoveAvailable(array<int, 8> listOfValidMoves) {
 	return false;
 }
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "LocalValueEscapesScope"
 void makeMove(int move, int& Xpos, int& Ypos, array<array<int, 8>, 8>& board) {
 	array<int, 8> horizontalMove{2, 1, -1, -2, -2, -1, 1, 2};
 	array<int, 8> verticalMove{-1, -2, -2, -1, 1, 2, 2, 1};
 	board[Xpos][Ypos] = 1;
-	cout << "Making move " << move << ", from " << Xpos << "," << Ypos << "  to  ";
+//	cout << "Making move " << move << ", from " << Xpos << "," << Ypos << "  to  ";
 	Xpos += horizontalMove[move];
 	Ypos += verticalMove[move];
-	cout << Xpos << "," << Ypos << endl;
+//	cout << Xpos << "," << Ypos << endl;
 	board[Xpos][Ypos] = 1;
 }
-#pragma clang diagnostic pop
-
 
 array<int, 8> validateMovesFromPos(int posX, int posY, array<array<int, 8>, 8> &board) {
 	array<int, 8> horizontalMove{2, 1, -1, -2, -2, -1, 1, 2};
